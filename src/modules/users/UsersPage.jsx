@@ -1,14 +1,15 @@
 import { useEffect, useState } from "react";
 import { useOutletContext } from "react-router";
-import { request } from "../../shared/api/client.js";
+import { createUser, listRoles, listUsers, resetUserPassword } from "./api.js";
+import { listDepartments } from "../../shared/organization/api.js";
 import { useAuth } from "../../shared/auth/AuthProvider.jsx";
 import { useResource } from "../../shared/hooks/useResource.js";
 
 export function UsersPage() {
   const { session, hasPermission } = useAuth();
   const { onNotice } = useOutletContext();
-  const { data: users, loading, error, refresh } = useResource(() => request("/users?page=1&page_size=100").then((page) => page.items || []), [session]);
-  const { data: departments } = useResource(() => hasPermission("core.department.view") ? request("/departments") : Promise.resolve([]), [session]);
+  const { data: users, loading, error, refresh } = useResource(() => listUsers(), [session]);
+  const { data: departments } = useResource(() => hasPermission("core.department.view") ? listDepartments() : Promise.resolve([]), [session]);
   const [roles, setRoles] = useState([]);
   const [showForm, setShowForm] = useState(false); const [busy, setBusy] = useState(false); const [query, setQuery] = useState("");
   const [form, setForm] = useState({ full_name: "", email: "", password: "", department_id: "", role_id: "" });
@@ -17,13 +18,13 @@ export function UsersPage() {
 
   useEffect(() => {
     if (!canCreate) return;
-    request("/roles").then(setRoles).catch((cause) => onNotice(cause.message));
+    listRoles().then(setRoles).catch((cause) => onNotice(cause.message));
   }, [canCreate, onNotice]);
 
   async function create(event) {
     event.preventDefault(); setBusy(true);
     try {
-      await request("/users", { method: "POST", csrfToken: session.csrf_token, body: JSON.stringify({ full_name: form.full_name, email: form.email, password: form.password, department_id: form.department_id || null, role_ids: form.role_id ? [form.role_id] : [], must_change_password: true }) });
+      await createUser(session.csrf_token, { full_name: form.full_name, email: form.email, password: form.password, department_id: form.department_id || null, role_ids: form.role_id ? [form.role_id] : [], must_change_password: true });
       setForm({ full_name: "", email: "", password: "", department_id: "", role_id: "" }); setShowForm(false); await refresh();
     } catch (cause) { onNotice(cause.message); }
     finally { setBusy(false); }
@@ -33,7 +34,7 @@ export function UsersPage() {
     const password = window.prompt(`Set a temporary password for ${user.full_name} (at least 10 characters):`);
     if (!password) return;
     try {
-      await request(`/users/${user.id}/reset-password`, { method: "POST", csrfToken: session.csrf_token, body: JSON.stringify({ new_password: password, must_change_password: true }) });
+      await resetUserPassword(session.csrf_token, user.id, password);
       onNotice(`Temporary password set for ${user.email}.`);
     } catch (cause) { onNotice(cause.message); }
   }

@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { useAuth } from "../../shared/auth/AuthProvider.jsx";
-import { apiBase, request } from "../../shared/api/client.js";
+import { apiBase } from "../../shared/api/client.js";
+import { changePassword } from "../../shared/auth/api.js";
 
 export function LoginPage() {
   const { login } = useAuth();
@@ -38,7 +39,7 @@ export function ChangePasswordPage() {
   async function submit(event) {
     event.preventDefault(); setBusy(true); setError("");
     try {
-      await request("/auth/change-password", { method: "POST", csrfToken: session.csrf_token, body: JSON.stringify({ current_password: current, new_password: next }) });
+      await changePassword(session.csrf_token, current, next);
       await restoreSession();
       navigate("/", { replace: true });
     } catch (cause) { setError(cause.message); }

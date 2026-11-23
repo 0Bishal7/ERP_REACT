@@ -1,26 +1,26 @@
 import { useState } from "react";
 import { useOutletContext } from "react-router";
-import { request } from "../../shared/api/client.js";
+import { createDepartment, listDepartments, updateDepartment } from "./api.js";
 import { useAuth } from "../../shared/auth/AuthProvider.jsx";
 import { useResource } from "../../shared/hooks/useResource.js";
 
 export function DepartmentsPage() {
   const { session, hasPermission } = useAuth();
   const { onNotice } = useOutletContext();
-  const { data: departments, loading, error, refresh } = useResource(() => request("/departments"), [session]);
+  const { data: departments, loading, error, refresh } = useResource(listDepartments, [session]);
   const [name, setName] = useState(""); const [code, setCode] = useState(""); const [busy, setBusy] = useState(false);
   const canManage = hasPermission("core.department.manage");
 
   async function create(event) {
     event.preventDefault(); setBusy(true);
     try {
-      await request("/departments", { method: "POST", csrfToken: session.csrf_token, body: JSON.stringify({ name, code: code.toLowerCase().replace(/[^a-z0-9_]/g, "_") }) });
+      await createDepartment(session.csrf_token, { name, code: code.toLowerCase().replace(/[^a-z0-9_]/g, "_") });
       setName(""); setCode(""); await refresh();
     } catch (cause) { onNotice(cause.message); }
     finally { setBusy(false); }
   }
   async function toggle(department) {
-    try { await request(`/departments/${department.id}`, { method: "PATCH", csrfToken: session.csrf_token, body: JSON.stringify({ is_active: !department.is_active }) }); await refresh(); }
+    try { await updateDepartment(session.csrf_token, department.id, { is_active: !department.is_active }); await refresh(); }
     catch (cause) { onNotice(cause.message); }
   }
 

@@ -1,11 +1,11 @@
 import { useAuth } from "../../shared/auth/AuthProvider.jsx";
-import { request } from "../../shared/api/client.js";
+import { listDepartments } from "../../shared/organization/api.js";
 import { useResource } from "../../shared/hooks/useResource.js";
 
 export function DashboardPage() {
   const { session, hasPermission } = useAuth();
   const departmentsResource = useResource(
-    () => hasPermission("core.department.view") ? request("/departments") : Promise.resolve([]),
+    () => hasPermission("core.department.view") ? listDepartments() : Promise.resolve([]),
     [session, hasPermission],
   );
   const departments = departmentsResource.data;

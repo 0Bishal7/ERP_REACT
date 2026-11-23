@@ -1,5 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { request } from "../api/client.js";
+import * as authApi from "./api.js";
 
 const AuthContext = createContext(null);
 
@@ -9,7 +9,7 @@ export function AuthProvider({ children }) {
 
   const restoreSession = useCallback(async () => {
     try {
-      const me = await request("/auth/me");
+      const me = await authApi.getCurrentSession();
       setSession(me);
       return me;
     } catch {
@@ -23,14 +23,14 @@ export function AuthProvider({ children }) {
   useEffect(() => { restoreSession(); }, [restoreSession]);
 
   const login = useCallback(async (email, password) => {
-    const me = await request("/auth/login", { method: "POST", body: JSON.stringify({ email, password }) });
+    const me = await authApi.login(email, password);
     setSession(me);
     return me;
   }, []);
 
   const logout = useCallback(async () => {
     try {
-      if (session) await request("/auth/logout", { method: "POST", csrfToken: session.csrf_token });
+      if (session) await authApi.logout(session.csrf_token);
     } finally {
       setSession(null);
     }
