@@ -13,19 +13,8 @@ React frontend for the ERP API. The frontend uses cookie-based sessions and read
 
    ```sh
    npm install
+   npm run build
    npm run dev
    ```
 
-3. Open the Vite URL (normally `http://localhost:5173`) and sign in with a seeded account.
-
-Vite proxies `/api/*` and `/health` to `http://127.0.0.1:8000`, so browser requests and the `httpOnly` session cookie use the same origin. Set `VITE_BACKEND_URL` in a local `.env` file if the backend listens elsewhere. For a direct API connection, set `VITE_API_BASE_URL` to the API base URL; the backend CORS origins must then include the frontend origin.
-
-## Connected endpoints
-
-- `POST /api/v1/auth/login`, `GET /api/v1/auth/me`, and `POST /api/v1/auth/logout`
-- `POST /api/v1/auth/change-password` for first login password changes
-- `GET/POST /api/v1/departments` and `PATCH /api/v1/departments/{id}`
-- `GET/POST /api/v1/users` and `POST /api/v1/users/{id}/reset-password`
-- `GET /api/v1/roles` for user creation role assignments
-
-Write requests include the CSRF token returned by login or `/auth/me`. The backend remains authoritative for permissions and account access.
+3. .env file add VITE_BACKEND_URL=http://127.0.0.1:8000
