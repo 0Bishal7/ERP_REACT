@@ -21,11 +21,12 @@ button { font: inherit; cursor: pointer; }
 .notice { padding: 12px 14px; border: 1px solid #f2d8b4; border-radius: 9px; background: #fffaf1; color: #80561a; font-size: 12px; }
 .notice.error { margin: 0; border-color: #f0cbcb; background: #fff5f5; color: #a13f3f; }
 .loading { display: grid; min-height: 100vh; place-items: center; color: #64718a; font-size: 14px; }
+.page-loading { display: grid; min-height: 240px; place-items: center; color: #8490a7; font-size: 12px; }
 .shell { display: grid; min-height: 100vh; grid-template-columns: 248px 1fr; background: #f7f8fc; }
 .sidebar { position: sticky; top: 0; display: flex; height: 100vh; flex-direction: column; padding: 24px 16px 16px; border-right: 1px solid #e9ecf3; background: #fff; }
 .brand { display: flex; align-items: center; gap: 11px; padding: 2px 9px 30px; color: #1f2943; font-size: 14px; font-weight: 800; text-decoration: none; }
 .nav-label { margin: 0 10px 9px; color: #a0a8b8; font-size: 9px; font-weight: 800; letter-spacing: .13em; }
-.nav-item { display: flex; align-items: center; justify-content: space-between; margin: 2px 0; padding: 10px 11px; border: 0; border-radius: 8px; background: transparent; color: #66718a; text-align: left; font-size: 12px; }
+.nav-item { display: flex; align-items: center; justify-content: space-between; margin: 2px 0; padding: 10px 11px; border: 0; border-radius: 8px; background: transparent; color: #66718a; text-align: left; text-decoration: none; font-size: 12px; }
 .nav-item:hover, .nav-item.selected { background: #eef2ff; color: #3156c9; }
 .nav-item.selected { font-weight: 750; }
 .nav-item span { color: #9ba5b8; font-size: 11px; }
