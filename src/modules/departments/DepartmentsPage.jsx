@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useOutletContext } from "react-router";
 import { createDepartment, listDepartments, updateDepartment } from "./api.js";
 import { listOrganizations } from "../../shared/organization/api.js";
