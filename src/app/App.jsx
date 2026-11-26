@@ -5,6 +5,8 @@ import { ChangePasswordPage, LoginPage } from "../modules/auth/LoginPage.jsx";
 import { dashboardRoute } from "../modules/dashboard/routes.jsx";
 import { departmentsRoute } from "../modules/departments/routes.jsx";
 import { usersRoute } from "../modules/users/routes.jsx";
+import { organizationsRoute } from "../modules/organizations/routes.jsx";
+import { rolesRoute } from "../modules/roles/routes.jsx";
 
 function PublicOnly() {
   const { session, loading } = useAuth();
@@ -33,6 +35,8 @@ export default function App() {
           {dashboardRoute}
           {usersRoute}
           {departmentsRoute}
+          {organizationsRoute}
+          {rolesRoute}
         </Route>
       </Route>
     </Route>

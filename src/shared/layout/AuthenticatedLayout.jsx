@@ -7,7 +7,7 @@ export function AuthenticatedLayout() {
   const [notice, setNotice] = useState("");
   const location = useLocation();
   const navigate = useNavigate();
-  const view = location.pathname === "/users" ? "users" : location.pathname === "/departments" ? "departments" : "overview";
+  const view = location.pathname === "/users" ? "users" : location.pathname === "/departments" ? "departments" : location.pathname === "/organizations" ? "organizations" : location.pathname === "/roles" ? "roles" : "overview";
   const user = session.user;
 
   async function signOut() {
@@ -22,10 +22,12 @@ export function AuthenticatedLayout() {
       <NavLink end className={({ isActive }) => `nav-item ${isActive ? "selected" : ""}`} to="/">Overview</NavLink>
       {hasPermission("core.user.view") && <NavLink className={({ isActive }) => `nav-item ${isActive ? "selected" : ""}`} to="/users">Users</NavLink>}
       {hasPermission("core.department.view") && <NavLink className={({ isActive }) => `nav-item ${isActive ? "selected" : ""}`} to="/departments">Departments</NavLink>}
+      {hasPermission("core.organization.manage") && <NavLink className={({ isActive }) => `nav-item ${isActive ? "selected" : ""}`} to="/organizations">Organizations</NavLink>}
+      {hasPermission("core.role.view") && <NavLink className={({ isActive }) => `nav-item ${isActive ? "selected" : ""}`} to="/roles">Roles</NavLink>}
       <div className="sidebar-bottom"><span className="avatar">{user.full_name?.slice(0, 1).toUpperCase()}</span><div className="identity"><strong>{user.full_name}</strong><small>{user.email}</small></div><button className="icon-button" title="Sign out" onClick={signOut}>↗</button></div>
     </aside>
     <main className="content">
-      <header className="content-head"><div><p className="eyebrow">ERP PLATFORM / {view.toUpperCase()}</p><h1>{view === "overview" ? "Overview" : view === "users" ? "Users" : "Departments"}</h1></div><span className="secure-badge"><i /> Session active</span></header>
+      <header className="content-head"><div><p className="eyebrow">ERP PLATFORM / {view.toUpperCase()}</p><h1>{view === "overview" ? "Overview" : view === "users" ? "Users" : view === "organizations" ? "Organizations" : view === "roles" ? "Roles" : "Departments"}</h1></div><span className="secure-badge"><i /> Session active</span></header>
       {notice && <p className="notice" role="status">{notice}<button className="dismiss" onClick={() => setNotice("")}>Dismiss</button></p>}
       <Outlet context={{ onNotice: setNotice }} />
     </main>
